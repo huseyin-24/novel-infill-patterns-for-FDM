@@ -1,0 +1,126 @@
+
+
+FOR layer OF total_layer_number
+    IF layer IN polygon_region THEN
+        wall_points, infill_pints = polygon(side_number, random_density, radius)
+        FOR wall_point IN wall_points
+            WRITE gcode
+        END FOR 
+        FOR infill_point IN infill_points
+            WRITE gcode
+        END FOR
+    
+    ELSE IF layer IN transition_region THEN
+        wall_points, infill_pints = distorted_polygon(side_number, random_density, radius)
+        FOR wall_point IN wall_points
+            WRITE gcode
+        END FOR 
+        FOR infill_point IN infill_points
+            WRITE gcode
+        END FOR
+    
+    ELSE IF layer IN circular_region THEN 
+        // This part is only for randomly filled sample. For spirally filled sample,
+        // the function 'circle_spiral(radius, num_points_spiral, num_turns)' should be called.
+        wall_points, infill_pints = circle_random(radius, random_density)
+        
+        FOR wall_point IN wall_points
+            WRITE gcode
+        END FOR 
+        FOR infill_point IN infill_points
+            WRITE gcode
+        END FOR    
+    
+    END IF 
+    
+    layer_height = layer_height + layer_thickness
+END FOR
+
+// Note that polygon(params), circle_random(params), circle_spiral(params), distorted_polygon(params)
+// functions are all in the same form as generalized function points_visited(parameters) below.
+// Please refer to generator python scripts for further details about how points are calculated.
+FUNCTION points_visited(parameters)
+    SET wall_points, infill_pints equal to EMPTY LIST
+    
+    CALCULATE outermost_points
+    APPEND outermost_points TO wall_points
+    FOR wall OF wall_number-1 
+        APPEND offset_points TO wall_points
+    END FOR     
+
+    FOR iter OF random_density 
+        SET random_point equal to any_point from innermost_wall_points
+        APPEND random_point TO infill_pints
+    END FOR    
+
+    RETURN wall_points, infill_pints
+END FUNCTION
+
+FUNCTION polygon(side_number, random_density, radius)
+    SET wall_points, infill_pints equal to EMPTY LIST
+    
+    CALCULATE outermost_polygon_vertices
+    APPEND outermost_polygon_vertices TO wall_points
+    FOR wall OF wall_number-1 
+        APPEND offset_polygon_vertices TO wall_points
+    END FOR     
+
+    FOR iter OF random_density 
+        SET random_point equal to any_point from innermost_wall_points
+        APPEND random_point TO infill_pints
+    END FOR    
+
+    RETURN wall_points, infill_pints
+END FUNCTION
+
+FUNCTION circle_random(radius, random_density)
+    SET wall_points, infill_pints equal to EMPTY LIST
+    
+    CALCULATE outermost_circle_vertices
+    APPEND outermost_circle_vertices TO wall_points
+    FOR wall OF wall_number-1 
+        APPEND offset_circle_vertices TO wall_points
+    END FOR     
+
+    FOR iter OF random_density 
+        SET random_point equal to any_point from innermost_wall_points
+        APPEND random_point TO infill_pints
+    END FOR    
+
+    RETURN wall_points, infill_pints
+END FUNCTION
+
+FUNCTION circle_spiral(radius, num_points_spiral, num_turns)
+    SET wall_points, infill_pints equal to EMPTY LIST
+    
+    CALCULATE outermost_circle_vertices
+    APPEND outermost_circle_vertices TO wall_points
+    FOR wall OF wall_number-1 
+        APPEND offset_circle_vertices TO wall_points
+    END FOR     
+
+    FOR iter OF random_density 
+        SET random_point equal to any_point from innermost_wall_points
+        APPEND random_point TO infill_pints
+    END FOR    
+
+    RETURN wall_points, infill_pints
+END FUNCTION
+
+FUNCTION distorted_polygon(reduction, radius, random_density)
+    SET wall_points, infill_pints equal to EMPTY LIST
+    
+    CALCULATE outermost_distorted_points
+    APPEND outermost_distorted_points TO wall_points
+    FOR wall OF wall_number-1 
+        APPEND offset_distorted_points TO wall_points
+    END FOR     
+    
+    FOR iter OF random_density 
+        SET random_point equal to any_point from innermost_wall_points
+        APPEND random_point TO infill_pints
+    END FOR    
+
+    RETURN wall_points, infill_pints
+END FUNCTION
+
