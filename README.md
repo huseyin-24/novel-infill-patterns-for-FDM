@@ -4,5 +4,6 @@ Custom gcodes produce torsion test specimens filled with random lines and spiral
 
 Stay tuned for paper!
 
-<p align="center"><img width="400" alt="Picture1 - Kopya (2)" src="https://github.com/user-attachments/assets/24ce5bf5-4872-463c-864d-783f17e58f67" />
+<p align="center"><img width="400"  src="https://github.com/user-attachments/assets/aac8f1f4-d86f-4709-a6f7-04751181a7ab" />
 <p align="center">Specimen geometry and infill types</p>
+
