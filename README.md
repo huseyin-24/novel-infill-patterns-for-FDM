@@ -1,4 +1,4 @@
-# novel-infill-patterns-for-FDM
+# novel-infill-patterns-for-FFF
 This repo contains gcode files and generator python scripts for custom gcodes.
 Custom gcodes produce torsion test specimens filled with random lines and spiral patterns.
 
